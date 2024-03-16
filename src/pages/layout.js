@@ -1,7 +1,9 @@
-export default function RootLayout({ children }) {
+const RootLayout = ({ children }) => {
   return (
     <html lang="ja">
       <body>{children}</body>
     </html>
   );
-}
+};
+
+export default RootLayout;
