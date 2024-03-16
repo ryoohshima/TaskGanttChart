@@ -1,5 +1,13 @@
+import React from 'react';
+import EnhancedTable from '@/components/organisms/table';
+
 const Dashboard = () => {
-  return <h1>Hello, Next.js!</h1>;
+  return (
+    <>
+      <h1>Dashboard</h1>
+      <EnhancedTable />
+    </>
+  );
 };
 
 export default Dashboard;
