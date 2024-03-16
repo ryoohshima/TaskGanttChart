@@ -1,6 +1,7 @@
 import React from 'react';
-import EnhancedTable from '@/components/organisms/table';
 import supabase from '@/lib/supabase';
+import EnhancedTable from '@/components/organisms/table';
+import Navigation from '@/components/organisms/navigation';
 
 export const getServerSideProps = async () => {
   // サーバーサイドでデータを取得
@@ -30,6 +31,7 @@ const Dashboard = ({ tasks, members }) => {
   return (
     <>
       <h1>Dashboard</h1>
+      <Navigation />
       <EnhancedTable />
     </>
   );
