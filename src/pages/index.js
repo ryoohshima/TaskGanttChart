@@ -1,6 +1,6 @@
 import React from 'react';
 import supabase from '@/lib/supabase';
-import EnhancedTable from '@/components/organisms/table';
+import CustomTable from '@/components/organisms/table';
 import Navigation from '@/components/organisms/navigation';
 
 export const getServerSideProps = async () => {
@@ -27,11 +27,27 @@ export const getServerSideProps = async () => {
 };
 
 const Dashboard = ({ tasks, members }) => {
+  // ヘッダーの作成
+  const header = Object.keys(tasks[0]).filter(
+    (key) => key !== 'isDeleted' && key !== 'isFinished' && key !== 'created_at' && key !== 'id',
+  );
+
+  // テーブルの行の作成
+  const rows = tasks.map((task) => {
+    return {
+      id: task.id,
+      title: task.title,
+      startDate: task.startDate,
+      endDate: task.endDate,
+      assign: members.find((member) => member.id === task.assign && member.name).name,
+    };
+  });
+
   return (
     <>
       <h1>Dashboard</h1>
       <Navigation />
-      <EnhancedTable />
+      <CustomTable header={header} rows={rows} />
     </>
   );
 };
