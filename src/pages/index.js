@@ -10,12 +10,7 @@ export const getServerSideProps = async () => {
 
   // エラーがあればエラーページにリダイレクト
   if (tasksError || membersError) {
-    return {
-      redirect: {
-        destination: '/error',
-        permanent: false,
-      },
-    };
+    throw new Error('Internal Server Error');
   }
 
   // データをpropsにセット
