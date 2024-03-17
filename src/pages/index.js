@@ -1,6 +1,8 @@
 import React from 'react';
 import supabase from '@/lib/supabase';
+import { Box } from '@mui/material';
 import CustomTable from '@/components/organisms/table';
+import GanttChart from '@/components/organisms/ganttChart';
 
 export const getServerSideProps = async () => {
   // サーバーサイドでデータを取得
@@ -42,10 +44,24 @@ const Dashboard = ({ tasks, members }) => {
     };
   });
 
+  // ガントチャートの行の作成
+  const ganttRows = tasks.map((task) => {
+    return {
+      x: [task.startDate, task.endDate],
+      y: members.find((member) => member.id === task.assign && member.name).name,
+      z: task.title,
+    };
+  });
+
   return (
     <>
       <h1>Dashboard</h1>
-      <CustomTable header={header} rows={rows} />
+      <Box sx={{ display: 'flex' }}>
+        <CustomTable header={header} rows={rows} />
+        <Box sx={{ overflow: 'auto' }}>
+          <GanttChart ganttRows={ganttRows} />
+        </Box>
+      </Box>
     </>
   );
 };
