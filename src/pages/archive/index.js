@@ -1,7 +1,6 @@
 import React from 'react';
 import supabase from '@/lib/supabase';
 import CustomTable from '@/components/organisms/table';
-import Navigation from '@/components/organisms/navigation';
 
 export const getServerSideProps = async () => {
   // サーバーサイドでデータを取得
@@ -46,7 +45,6 @@ const Archive = ({ tasks, members }) => {
   return (
     <>
       <h1>Archive</h1>
-      <Navigation />
       <CustomTable header={header} rows={rows} />
     </>
   );
