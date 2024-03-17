@@ -5,14 +5,18 @@ import Link from '@mui/material/Link';
 const Navigation = () => {
   return (
     <nav>
-      <Stack direction="row" spacing={2}>
-        <Link href="/" underline="hover">
+      <Stack direction="row" spacing={4}>
+        <Link href="/" underline="hover" sx={{ color: 'text.secondary', fontWeight: 'bold' }}>
           Home
         </Link>
-        <Link href="/member" underline="hover">
+        <Link href="/member" underline="hover" sx={{ color: 'text.secondary', fontWeight: 'bold' }}>
           Member
         </Link>
-        <Link href="/archive" underline="hover">
+        <Link
+          href="/archive"
+          underline="hover"
+          sx={{ color: 'text.secondary', fontWeight: 'bold' }}
+        >
           Archive
         </Link>
       </Stack>
