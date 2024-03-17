@@ -13,11 +13,15 @@ export const getServerSideProps = async () => {
     throw new Error('Internal Server Error');
   }
 
+  // isDeletedがtrueのものは除外
+  const filteredTasks = tasks.filter((task) => !task.isDeleted && !task.isFinished);
+  const filteredMembers = members.filter((member) => !member.isDeleted);
+
   // データをpropsにセット
   return {
     props: {
-      tasks: tasks || [],
-      members: members || [],
+      tasks: filteredTasks || [],
+      members: filteredMembers || [],
     },
   };
 };
