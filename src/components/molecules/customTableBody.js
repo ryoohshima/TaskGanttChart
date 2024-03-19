@@ -10,8 +10,10 @@ const CustomTableBody = ({ rows }) => {
         <TableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
           {Object.keys(row).map((key, index) => {
             if (key !== 'id') {
+              const align = index === 1 ? 'left' : 'right';
+              const width = index === 1 ? '40%' : '20%';
               return (
-                <TableCell key={row.id + key} align={index === 1 ? 'left' : 'right'}>
+                <TableCell key={row.id + key} align={align} sx={{ width: width }}>
                   {row[key]}
                 </TableCell>
               );
