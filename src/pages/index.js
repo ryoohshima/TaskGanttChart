@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import supabase from '@/lib/supabase';
 import { Box } from '@mui/material';
 import CustomTable from '@/components/organisms/table';
 import GanttChart from '@/components/organisms/ganttChart';
+import CustomTabs from '@/components/organisms/tab';
 import createChartOptions from '@/lib/chart';
 
 export const getServerSideProps = async () => {
@@ -48,13 +49,22 @@ const Dashboard = ({ tasks, members }) => {
   // ガントチャートのデータ作成
   const chartOptions = createChartOptions(rows);
 
+  // タブボタンの実装
+  const [tabValue, setTabValue] = useState(0);
+  const buttons = [{ id: 0, label: 'Table' }, { id: 1, label: 'Chart' }];
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
+
   return (
     <>
       <h1>Dashboard</h1>
-      <Box sx={{ display: 'flex' }}>
+      <CustomTabs buttons={buttons} tabValue={tabValue} onTabChange={handleTabChange} />
+      <Box role="tabpanel" hidden={tabValue !== 0}>
         <CustomTable header={header} rows={rows} />
-        <Box sx={{ overflow: 'auto' }}>
-          <GanttChart ganttRows={ganttRows} />
+      </Box>
+      <Box role="tabpanel" hidden={tabValue !== 1} sx={{ position: 'relative', overflowX: 'scroll' }}>
+        <Box sx={{ width: '1000px' }}>
           <GanttChart chartOptions={chartOptions} />
         </Box>
       </Box>
