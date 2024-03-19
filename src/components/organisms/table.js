@@ -7,7 +7,7 @@ import CustomTableBody from '@/components/molecules/customTableBody';
 
 const CustomTable = ({ header, rows }) => {
   return (
-    <TableContainer component={Paper} sx={{ width: '650px' }}>
+    <TableContainer component={Paper}>
       <Table aria-label="simple table">
         <CustomTableHeader header={header} />
         <CustomTableBody rows={rows} />
