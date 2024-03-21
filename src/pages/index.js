@@ -6,6 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import CustomTable from '@/components/organisms/table';
 import GanttChart from '@/components/organisms/ganttChart';
 import CustomTabs from '@/components/organisms/tab';
+import CustomModal from '@/components/organisms/modal';
 import createChartOptions from '@/lib/chart';
 
 export const getServerSideProps = async () => {
@@ -52,8 +53,69 @@ const Dashboard = ({ tasks, members }) => {
     setTabValue(newValue);
   };
 
+  // ボタンの実装
+  // モーダルの実装
   const [modalOpen, setModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const handleModalOpen = () => setModalOpen(true)
+  const handleModalClose = () => setModalOpen(false);
+  const modalItems = [
+    {
+      label: 'title',
+      item: 'input',
+    },
+    {
+      label: 'startDate',
+      item: 'date',
+    },
+    {
+      label: 'endDate',
+      item: 'date',
+    },
+    {
+      label: 'assign',
+      item: 'select',
+      options: members.map((member) => member.name),
+    },
+  ];
+
+  const [insertData, setInsertData] = useState({
+    title: '',
+    startDate: '',
+    endDate: '',
+    assign: '',
+  });
+  const handleChangeInput = ({ id, value }) => {
+    if (id === 'assign') {
+      const assign = members.find((member) => member.name === value);
+      setInsertData({ ...insertData, assign: assign.id });
+    } else {
+      setInsertData({ ...insertData, [id]: value });
+    }
+  }
+  const handleInsertData = async () => {
+    setLoading(true);
+
+    // supabaseにデータを追加
+    const res = await fetch('/api/insert', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tableName: 'tasks',
+        data: insertData,
+      }),
+    });
+
+    if (res.status == 200) {
+      setModalOpen(false);
+    } else {
+      alert('データの追加に失敗しました');
+    }
+    setLoading(false);
+  }
+
   return (
     <>
       <h1>Dashboard</h1>
@@ -69,6 +131,7 @@ const Dashboard = ({ tasks, members }) => {
           <GanttChart chartOptions={chartOptions} />
         </Box>
       </Box>
+      <CustomModal modalOpen={modalOpen} onModalClose={handleModalClose} modalItems={modalItems} onInsertData={handleInsertData} onChangeInput={handleChangeInput} loading={loading} />
     </>
   );
 };
