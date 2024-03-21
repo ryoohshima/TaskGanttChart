@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { supabase, fetchData } from '@/lib/supabase';
 import { Box } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import AddIcon from '@mui/icons-material/Add';
 import CustomTable from '@/components/organisms/table';
 import GanttChart from '@/components/organisms/ganttChart';
 import CustomTabs from '@/components/organisms/tab';
@@ -50,12 +52,17 @@ const Dashboard = ({ tasks, members }) => {
     setTabValue(newValue);
   };
 
+  const [modalOpen, setModalOpen] = useState(false);
+  const handleModalOpen = () => setModalOpen(true)
   return (
     <>
       <h1>Dashboard</h1>
       <CustomTabs buttons={buttons} tabValue={tabValue} onTabChange={handleTabChange} />
       <Box role="tabpanel" hidden={tabValue !== 0}>
         <CustomTable header={header} rows={rows} />
+        <IconButton aria-label="add" onClick={handleModalOpen}>
+          <AddIcon />
+        </IconButton>
       </Box>
       <Box role="tabpanel" hidden={tabValue !== 1} sx={{ position: 'relative', overflowX: 'scroll' }}>
         <Box sx={{ width: '1000px' }}>
