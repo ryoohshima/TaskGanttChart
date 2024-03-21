@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import supabase from '@/lib/supabase';
+import { supabase, fetchData } from '@/lib/supabase';
 import { Box } from '@mui/material';
 import CustomTable from '@/components/organisms/table';
 import GanttChart from '@/components/organisms/ganttChart';
@@ -8,23 +8,17 @@ import createChartOptions from '@/lib/chart';
 
 export const getServerSideProps = async () => {
   // サーバーサイドでデータを取得
-  const { data: tasks, error: tasksError } = await supabase.from('tasks').select('*');
-  const { data: members, error: membersError } = await supabase.from('members').select('*');
+  const tasks = await fetchData(supabase, 'tasks', '*');
+  const members = await fetchData(supabase, 'members', '*');
 
-  // エラーがあればエラーページにリダイレクト
-  if (tasksError || membersError) {
-    throw new Error('Internal Server Error');
-  }
-
-  // isDeletedがtrueのものは除外
-  const filteredTasks = tasks.filter((task) => !task.isDeleted && !task.isFinished);
-  const filteredMembers = members.filter((member) => !member.isDeleted);
+  // isFinishedがtrueのものは除外
+  const filteredTasks = tasks.filter((task) => !task.isFinished);
 
   // データをpropsにセット
   return {
     props: {
       tasks: filteredTasks || [],
-      members: filteredMembers || [],
+      members: members || [],
     },
   };
 };
