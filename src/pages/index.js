@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { supabase, fetchData } from '@/lib/supabase';
 import { Box } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
@@ -32,19 +32,29 @@ const Dashboard = ({ tasks, members }) => {
     (key) => key !== 'isDeleted' && key !== 'isFinished' && key !== 'created_at' && key !== 'id',
   );
 
-  // テーブルの行の作成
-  const rows = tasks.map((task) => {
-    return {
-      id: task.id,
-      title: task.title,
-      startDate: task.startDate,
-      endDate: task.endDate,
-      assign: members.find((member) => member.id === task.assign && member.name).name,
-    };
-  });
+  const [rows, setRows] = useState([]);
+  const [chartOptions, setChartOptions] = useState({});
+  useEffect(() => {
+    // テーブルの行の作成
+    const rows = createRows(tasks);
+    setRows(rows);
 
-  // ガントチャートのデータ作成
-  const chartOptions = createChartOptions(rows);
+    // ガントチャートのデータ作成
+    const chartOptions = createChartOptions(rows);
+    setChartOptions(chartOptions);
+  }, [tasks, members]);
+
+  const createRows = (tasks) => {
+    return tasks.map((task) => {
+      return {
+        id: task.id,
+        title: task.title,
+        startDate: task.startDate,
+        endDate: task.endDate,
+        assign: members.find((member) => member.id === task.assign && member.name).name,
+      };
+    });
+  }
 
   // タブボタンの実装
   const [tabValue, setTabValue] = useState(0);
@@ -53,7 +63,6 @@ const Dashboard = ({ tasks, members }) => {
     setTabValue(newValue);
   };
 
-  // ボタンの実装
   // モーダルの実装
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -79,6 +88,7 @@ const Dashboard = ({ tasks, members }) => {
     },
   ];
 
+  // データ追加の実装
   const [insertData, setInsertData] = useState({
     title: '',
     startDate: '',
@@ -110,6 +120,27 @@ const Dashboard = ({ tasks, members }) => {
 
     if (res.status == 200) {
       setModalOpen(false);
+
+      // データの再取得
+      const newTasks = await fetch('/api/fetch', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tableName: 'tasks',
+        }),
+      });
+
+      if (newTasks.status == 200) {
+        const data = await newTasks.json();
+        const rows = createRows(data);
+        setRows(rows);
+        const chartOptions = createChartOptions(rows);
+        setChartOptions(chartOptions);
+      } else {
+        alert('データの再取得に失敗しました。ページをリロードしてください。');
+      }
     } else {
       alert('データの追加に失敗しました');
     }
