@@ -119,30 +119,58 @@ const Dashboard = ({ tasks, members }) => {
     });
 
     if (res.status == 200) {
+      handleReloadData();
       setModalOpen(false);
-
-      // データの再取得
-      const newTasks = await fetch('/api/fetch', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          tableName: 'tasks',
-        }),
-      });
-
-      if (newTasks.status == 200) {
-        const data = await newTasks.json();
-        const rows = createRows(data);
-        setRows(rows);
-        const chartOptions = createChartOptions(rows);
-        setChartOptions(chartOptions);
-      } else {
-        alert('データの再取得に失敗しました。ページをリロードしてください。');
-      }
     } else {
       alert('データの追加に失敗しました');
+    }
+    setLoading(false);
+  }
+
+  // データの再取得
+  const handleReloadData = async () => {
+    const newTasks = await fetch('/api/fetch', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tableName: 'tasks',
+      }),
+    });
+
+    if (newTasks.status == 200) {
+      const data = await newTasks.json();
+      const rows = createRows(data);
+      setRows(rows);
+      const chartOptions = createChartOptions(rows);
+      setChartOptions(chartOptions);
+    } else {
+      alert('データの再取得に失敗しました。ページをリロードしてください。');
+    }
+  }
+
+  // データの削除
+  const handleDeleteData = async (id) => {
+    setLoading(true);
+
+    // supabaseからデータを削除
+    const res = await fetch('/api/update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tableName: 'tasks',
+        data: { isDeleted: true },
+        id: id,
+      }),
+    });
+
+    if (res.status == 200) {
+      handleReloadData();
+    } else {
+      alert('データの削除に失敗しました');
     }
     setLoading(false);
   }
@@ -152,7 +180,7 @@ const Dashboard = ({ tasks, members }) => {
       <h1>Dashboard</h1>
       <CustomTabs buttons={buttons} tabValue={tabValue} onTabChange={handleTabChange} />
       <Box role="tabpanel" hidden={tabValue !== 0}>
-        <CustomTable header={header} rows={rows} />
+        <CustomTable header={header} rows={rows} onDeleteData={handleDeleteData} />
         <IconButton aria-label="add" onClick={handleModalOpen}>
           <AddIcon />
         </IconButton>

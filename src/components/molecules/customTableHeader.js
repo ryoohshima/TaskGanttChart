@@ -16,6 +16,7 @@ const CustomTableHeader = ({ header }) => {
             </TableCell>
           );
         })}
+        <TableCell />
       </TableRow>
     </TableHead>
   );
