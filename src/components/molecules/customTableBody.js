@@ -1,9 +1,57 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TableBody from '@mui/material/TableBody';
 import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
+import Button from '@mui/material/Button';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
-const CustomTableBody = ({ rows }) => {
+const RowMenu = ({ row, onDeleteData }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  return (
+    <>
+      <Button
+        id="basic-button"
+        aria-controls={open ? 'basic-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+      >
+        <MoreVertIcon />
+      </Button>
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+        <MenuItem onClick={handleClose}>
+          <EditIcon />
+          edit
+        </MenuItem>
+        <MenuItem onClick={() => onDeleteData(row.id)}>
+          <DeleteIcon />
+          delete
+        </MenuItem>
+      </Menu>
+    </>
+  );
+}
+
+const CustomTableBody = ({ rows, onDeleteData }) => {
   return (
     <TableBody>
       {rows.map((row) => (
@@ -19,9 +67,13 @@ const CustomTableBody = ({ rows }) => {
               );
             }
           })}
+          <TableCell align="right">
+            <RowMenu row={row} onDeleteData={onDeleteData} />
+          </TableCell>
         </TableRow>
-      ))}
-    </TableBody>
+      ))
+      }
+    </TableBody >
   );
 };
 

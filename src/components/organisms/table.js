@@ -5,12 +5,12 @@ import Paper from '@mui/material/Paper';
 import CustomTableHeader from '@/components/molecules/customTableHeader';
 import CustomTableBody from '@/components/molecules/customTableBody';
 
-const CustomTable = ({ header, rows }) => {
+const CustomTable = ({ header, rows, onDeleteData }) => {
   return (
     <TableContainer component={Paper}>
       <Table aria-label="simple table">
         <CustomTableHeader header={header} />
-        <CustomTableBody rows={rows} />
+        <CustomTableBody rows={rows} onDeleteData={onDeleteData} />
       </Table>
     </TableContainer>
   );
