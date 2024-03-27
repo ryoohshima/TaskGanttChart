@@ -9,7 +9,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-const RowMenu = ({ row, onDeleteData }) => {
+const RowMenu = ({ row, onDeleteData, onShowModal }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -38,7 +38,7 @@ const RowMenu = ({ row, onDeleteData }) => {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => { onShowModal(row); handleClose(); }}>
           <EditIcon />
           edit
         </MenuItem>
@@ -51,7 +51,7 @@ const RowMenu = ({ row, onDeleteData }) => {
   );
 }
 
-const CustomTableBody = ({ rows, onDeleteData }) => {
+const CustomTableBody = ({ rows, onDeleteData, onShowModal }) => {
   return (
     <TableBody>
       {rows.map((row) => (
@@ -68,7 +68,7 @@ const CustomTableBody = ({ rows, onDeleteData }) => {
             }
           })}
           <TableCell align="right">
-            <RowMenu row={row} onDeleteData={onDeleteData} />
+            <RowMenu row={row} onDeleteData={onDeleteData} onShowModal={onShowModal} />
           </TableCell>
         </TableRow>
       ))

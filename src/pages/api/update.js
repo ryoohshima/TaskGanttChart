@@ -20,6 +20,10 @@ const update = async (req, res) => {
   const updateData = req.body.data;
   const updateId = req.body.id;
 
+  console.log('tableName:', tableName);
+  console.log('updateData:', updateData);
+  console.log('updateId:', updateId);
+
   // supabaseにデータを追加
   const { data, error } = await supabase.from(tableName).update(updateData).eq('id', updateId).select();
 

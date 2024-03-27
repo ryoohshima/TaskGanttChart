@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { supabase, fetchData } from '@/lib/supabase';
 import { Box } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
@@ -8,6 +8,7 @@ import GanttChart from '@/components/organisms/ganttChart';
 import CustomTabs from '@/components/organisms/tab';
 import CustomModal from '@/components/organisms/modal';
 import createChartOptions from '@/lib/chart';
+import { getMemberId, getMemberName } from '@/lib/assign';
 
 export const getServerSideProps = async () => {
   // サーバーサイドでデータを取得
@@ -46,12 +47,13 @@ const Dashboard = ({ tasks, members }) => {
 
   const createRows = (tasks) => {
     return tasks.map((task) => {
+      const assign = getMemberName(task.assign, members);
       return {
         id: task.id,
         title: task.title,
         startDate: task.startDate,
         endDate: task.endDate,
-        assign: members.find((member) => member.id === task.assign && member.name).name,
+        assign: assign,
       };
     });
   }
@@ -66,8 +68,19 @@ const Dashboard = ({ tasks, members }) => {
   // モーダルの実装
   const [modalOpen, setModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const handleModalOpen = () => setModalOpen(true)
-  const handleModalClose = () => setModalOpen(false);
+  const handleModalOpen = () => {
+    setModalOpen(true)
+    setModalButton({ text: '追加', onClick: handleInsertData, variant: 'contained' });
+  }
+  const handleModalClose = () => {
+    setInsertData({
+      title: '',
+      startDate: '',
+      endDate: '',
+      assign: '',
+    });
+    setModalOpen(false)
+  };
   const modalItems = [
     {
       label: 'title',
@@ -96,15 +109,12 @@ const Dashboard = ({ tasks, members }) => {
     assign: '',
   });
   const handleChangeInput = ({ id, value }) => {
-    if (id === 'assign') {
-      const assign = members.find((member) => member.name === value);
-      setInsertData({ ...insertData, assign: assign.id });
-    } else {
-      setInsertData({ ...insertData, [id]: value });
-    }
-  }
-  const handleInsertData = async () => {
+    setInsertData({ ...insertData, [id]: value });
+  };
+  const handleInsertData = async (data) => {
     setLoading(true);
+    const assign = getMemberId(data.assign, members);
+    const newData = { ...data, assign: assign };
 
     // supabaseにデータを追加
     const res = await fetch('/api/insert', {
@@ -114,7 +124,7 @@ const Dashboard = ({ tasks, members }) => {
       },
       body: JSON.stringify({
         tableName: 'tasks',
-        data: insertData,
+        data: newData,
       }),
     });
 
@@ -175,12 +185,51 @@ const Dashboard = ({ tasks, members }) => {
     setLoading(false);
   }
 
+  // データの更新
+  const [modalButton, setModalButton] = useState({ text: '追加', onClick: handleInsertData, variant: 'contained' });
+  const handleShowModal = async (row) => {
+    setInsertData(row);
+    setModalButton({ text: '更新', onClick: handleUpdateData, variant: 'outlined' });
+    setModalOpen(true);
+  }
+
+  const handleUpdateData = async (data) => {
+    setLoading(true);
+    const newData = {
+      title: data.title,
+      startDate: data.startDate,
+      endDate: data.endDate,
+      assign: getMemberId(data.assign, members)
+    }
+
+    // supabaseにデータを更新
+    const res = await fetch('/api/update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tableName: 'tasks',
+        data: newData,
+        id: data.id,
+      }),
+    });
+
+    if (res.status == 200) {
+      handleReloadData();
+      handleModalClose();
+    } else {
+      alert('データの更新に失敗しました');
+    }
+    setLoading(false);
+  }
+
   return (
     <>
       <h1>Dashboard</h1>
       <CustomTabs buttons={buttons} tabValue={tabValue} onTabChange={handleTabChange} />
       <Box role="tabpanel" hidden={tabValue !== 0}>
-        <CustomTable header={header} rows={rows} onDeleteData={handleDeleteData} />
+        <CustomTable header={header} rows={rows} onDeleteData={handleDeleteData} onShowModal={handleShowModal} />
         <IconButton aria-label="add" onClick={handleModalOpen}>
           <AddIcon />
         </IconButton>
@@ -190,7 +239,7 @@ const Dashboard = ({ tasks, members }) => {
           <GanttChart chartOptions={chartOptions} />
         </Box>
       </Box>
-      <CustomModal modalOpen={modalOpen} onModalClose={handleModalClose} modalItems={modalItems} onInsertData={handleInsertData} onChangeInput={handleChangeInput} loading={loading} />
+      <CustomModal modalOpen={modalOpen} onModalClose={handleModalClose} modalItems={modalItems} onChangeInput={handleChangeInput} loading={loading} data={insertData} modalButton={modalButton} />
     </>
   );
 };
