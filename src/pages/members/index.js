@@ -4,7 +4,6 @@ import CustomTable from '@/components/organisms/table';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import CustomModal from '@/components/organisms/modal';
-import { set } from 'date-fns';
 
 export const getServerSideProps = async () => {
   // サーバーサイドでデータを取得

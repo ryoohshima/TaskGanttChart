@@ -7,10 +7,11 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import RestoreIcon from '@mui/icons-material/Restore';
+import DoneIcon from '@mui/icons-material/Done';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-const RowMenu = ({ row, onDeleteData, onShowModal, onRestoreData }) => {
+const RowMenu = ({ row, onDeleteData, onShowModal, onRestoreData, onFinishTask }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -39,6 +40,12 @@ const RowMenu = ({ row, onDeleteData, onShowModal, onRestoreData }) => {
           'aria-labelledby': 'basic-button',
         }}
       >
+        {onFinishTask && (
+          <MenuItem onClick={() => { onFinishTask(row.id) }}>
+            <DoneIcon />
+            finish
+          </MenuItem>
+        )}
         {onShowModal && (
           <MenuItem onClick={() => { onShowModal(row); handleClose(); }}>
             <EditIcon />
@@ -62,7 +69,7 @@ const RowMenu = ({ row, onDeleteData, onShowModal, onRestoreData }) => {
   );
 }
 
-const CustomTableBody = ({ rows, onDeleteData, onShowModal, onRestoreData }) => {
+const CustomTableBody = ({ rows, onDeleteData, onShowModal, onRestoreData, onFinishTask }) => {
   return (
     <TableBody>
       {rows.map((row) => (
@@ -79,7 +86,7 @@ const CustomTableBody = ({ rows, onDeleteData, onShowModal, onRestoreData }) => 
             }
           })}
           <TableCell align="right">
-            <RowMenu row={row} onDeleteData={onDeleteData} onShowModal={onShowModal} onRestoreData={onRestoreData} />
+            <RowMenu row={row} onDeleteData={onDeleteData} onShowModal={onShowModal} onRestoreData={onRestoreData} onFinishTask={onFinishTask} />
           </TableCell>
         </TableRow>
       ))
