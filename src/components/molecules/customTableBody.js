@@ -6,10 +6,11 @@ import Button from '@mui/material/Button';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import RestoreIcon from '@mui/icons-material/Restore';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
-const RowMenu = ({ row, onDeleteData, onShowModal }) => {
+const RowMenu = ({ row, onDeleteData, onShowModal, onRestoreData }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -38,20 +39,30 @@ const RowMenu = ({ row, onDeleteData, onShowModal }) => {
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem onClick={() => { onShowModal(row); handleClose(); }}>
-          <EditIcon />
-          edit
-        </MenuItem>
-        <MenuItem onClick={() => onDeleteData(row.id)}>
-          <DeleteIcon />
-          delete
-        </MenuItem>
+        {onShowModal && (
+          <MenuItem onClick={() => { onShowModal(row); handleClose(); }}>
+            <EditIcon />
+            edit
+          </MenuItem>
+        )}
+        {onDeleteData && (
+          <MenuItem onClick={() => onDeleteData(row.id)}>
+            <DeleteIcon />
+            delete
+          </MenuItem>
+        )}
+        {onRestoreData && (
+          <MenuItem onClick={() => onRestoreData(row.id)}>
+            <RestoreIcon />
+            restore
+          </MenuItem>
+        )}
       </Menu>
     </>
   );
 }
 
-const CustomTableBody = ({ rows, onDeleteData, onShowModal }) => {
+const CustomTableBody = ({ rows, onDeleteData, onShowModal, onRestoreData }) => {
   return (
     <TableBody>
       {rows.map((row) => (
@@ -68,7 +79,7 @@ const CustomTableBody = ({ rows, onDeleteData, onShowModal }) => {
             }
           })}
           <TableCell align="right">
-            <RowMenu row={row} onDeleteData={onDeleteData} onShowModal={onShowModal} />
+            <RowMenu row={row} onDeleteData={onDeleteData} onShowModal={onShowModal} onRestoreData={onRestoreData} />
           </TableCell>
         </TableRow>
       ))
