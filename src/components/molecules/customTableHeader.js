@@ -5,7 +5,7 @@ import TableCell from '@mui/material/TableCell';
 
 const CustomTableHeader = ({ header }) => {
   return (
-    <TableHead sx={{ backgroundColor: '#f0f8ff' }}>
+    <TableHead>
       <TableRow>
         {header.map((val, index) => {
           const align = index === 0 ? 'left' : 'right';
