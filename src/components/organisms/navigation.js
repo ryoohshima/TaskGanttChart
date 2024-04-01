@@ -9,8 +9,8 @@ const Navigation = () => {
         <Link href="/" underline="hover" sx={{ color: 'text.secondary', fontWeight: 'bold' }}>
           Home
         </Link>
-        <Link href="/member" underline="hover" sx={{ color: 'text.secondary', fontWeight: 'bold' }}>
-          Member
+        <Link href="/members" underline="hover" sx={{ color: 'text.secondary', fontWeight: 'bold' }}>
+          Members
         </Link>
         <Link
           href="/archive"
