@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase, fetchData } from '@/lib/supabase';
 import CustomTable from '@/components/organisms/table';
+import { Box } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import CustomModal from '@/components/organisms/modal';
@@ -178,10 +179,12 @@ const Members = ({ members }) => {
   return (
     <>
       <h1>Members</h1>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <IconButton aria-label="add" onClick={handleModalOpen}>
+          <AddIcon />
+        </IconButton>
+      </Box>
       <CustomTable header={header} rows={rows} onDeleteData={handleDeleteData} onShowModal={handleShowModal} />
-      <IconButton aria-label="add" onClick={handleModalOpen}>
-        <AddIcon />
-      </IconButton>
       <CustomModal modalOpen={modalOpen} onModalClose={handleModalClose} modalItems={modalItems} onChangeInput={handleChangeInput} loading={loading} data={insertData} modalButton={modalButton} />
     </>
   );
