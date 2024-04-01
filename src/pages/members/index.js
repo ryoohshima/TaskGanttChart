@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { supabase, fetchData } from '@/lib/supabase';
 import CustomTable from '@/components/organisms/table';
-import IconButton from '@mui/material/IconButton';
+import { Box } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import Button from '@mui/material/Button';
 import CustomModal from '@/components/organisms/modal';
 
 export const getServerSideProps = async () => {
@@ -178,10 +179,13 @@ const Members = ({ members }) => {
   return (
     <>
       <h1>Members</h1>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <Button aria-label="add" onClick={handleModalOpen}>
+          <AddIcon />
+          Add
+        </Button>
+      </Box>
       <CustomTable header={header} rows={rows} onDeleteData={handleDeleteData} onShowModal={handleShowModal} />
-      <IconButton aria-label="add" onClick={handleModalOpen}>
-        <AddIcon />
-      </IconButton>
       <CustomModal modalOpen={modalOpen} onModalClose={handleModalClose} modalItems={modalItems} onChangeInput={handleChangeInput} loading={loading} data={insertData} modalButton={modalButton} />
     </>
   );

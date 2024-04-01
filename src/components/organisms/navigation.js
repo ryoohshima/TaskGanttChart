@@ -7,7 +7,7 @@ const Navigation = () => {
     <nav>
       <Stack direction="row" spacing={4}>
         <Link href="/" underline="hover" sx={{ color: 'text.secondary', fontWeight: 'bold' }}>
-          Home
+          Dashboard
         </Link>
         <Link href="/members" underline="hover" sx={{ color: 'text.secondary', fontWeight: 'bold' }}>
           Members

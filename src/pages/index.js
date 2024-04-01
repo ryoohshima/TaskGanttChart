@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { supabase, fetchData } from '@/lib/supabase';
 import { Box } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
 import CustomTable from '@/components/organisms/table';
-import GanttChart from '@/components/organisms/ganttChart';
 import CustomTabs from '@/components/organisms/tab';
 import CustomModal from '@/components/organisms/modal';
 import createChartOptions from '@/lib/chart';
 import { getMemberId, getMemberName } from '@/lib/assign';
+
+// ガントチャートコンポーネントの動的インポート
+const GanttChart = dynamic(() => import('@/components/organisms/ganttChart'), { ssr: false });
 
 export const getServerSideProps = async () => {
   // サーバーサイドでデータを取得
@@ -253,15 +257,18 @@ const Dashboard = ({ tasks, members }) => {
   return (
     <>
       <h1>Dashboard</h1>
-      <CustomTabs buttons={buttons} tabValue={tabValue} onTabChange={handleTabChange} />
+      <Stack spacing={2} direction="row" alignItems="center" justifyContent="space-between">
+        <CustomTabs buttons={buttons} tabValue={tabValue} onTabChange={handleTabChange} />
+        <Button aria-label="add" onClick={handleModalOpen}>
+          <AddIcon />
+          Add
+        </Button>
+      </Stack>
       <Box role="tabpanel" hidden={tabValue !== 0}>
         <CustomTable header={header} rows={rows} onDeleteData={handleDeleteData} onShowModal={handleShowModal} onFinishTask={handleFinishTask} />
-        <IconButton aria-label="add" onClick={handleModalOpen}>
-          <AddIcon />
-        </IconButton>
       </Box>
-      <Box role="tabpanel" hidden={tabValue !== 1} sx={{ position: 'relative', overflowX: 'scroll' }}>
-        <Box sx={{ width: '1000px' }}>
+      <Box role="tabpanel" hidden={tabValue !== 1} sx={{ overflowX: 'auto' }}>
+        <Box sx={{ width: '100%' }}>
           <GanttChart chartOptions={chartOptions} />
         </Box>
       </Box>
