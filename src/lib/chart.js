@@ -7,9 +7,10 @@
 const createChartOptions = (data) => {
   // チャートに表示するデータを作成
   const chartData = data.map((row) => {
+    const title = row.title.length > 30 ? `${row.title.slice(0, 30)}...` : row.title;
     return {
       x: [row.startDate, row.endDate],
-      y: row.title,
+      y: title,
     };
   });
 
@@ -26,9 +27,21 @@ const createChartOptions = (data) => {
         data: chartData,
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
+          'rgba(255, 159, 64, 0.2)',
+          'rgba(255, 205, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(153, 102, 255, 0.2)',
+          'rgba(201, 203, 207, 0.2)',
         ],
         borderColor: [
           'rgba(255, 99, 132, 1)',
+          'rgb(255, 159, 64)',
+          'rgb(255, 205, 86)',
+          'rgb(75, 192, 192)',
+          'rgb(54, 162, 235)',
+          'rgb(153, 102, 255)',
+          'rgb(201, 203, 207)',
         ],
         borderWidth: 1,
         barPercentage: 0.4,
@@ -38,6 +51,9 @@ const createChartOptions = (data) => {
     },
     options: {
       indexAxis: 'y',
+      title: {
+        position: 'top',
+      },
       layout: {
         padding: {
           left: 10,
@@ -61,6 +77,21 @@ const createChartOptions = (data) => {
       plugins: {
         legend: { // 凡例
           display: false,
+        },
+        zoom: { // ズーム
+          pan: {
+            enabled: true,
+            mode: 'x',
+          },
+          zoom: {
+            wheel: {
+              enabled: true,
+            },
+            pinch: {
+              enabled: true,
+            },
+            mode: 'x',
+          },
         },
       },
     },

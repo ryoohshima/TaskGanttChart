@@ -10,6 +10,7 @@ import RestoreIcon from '@mui/icons-material/Restore';
 import DoneIcon from '@mui/icons-material/Done';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import Box from '@mui/material/Box';
 
 const RowMenu = ({ row, onDeleteData, onShowModal, onRestoreData, onFinishTask }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -80,7 +81,9 @@ const CustomTableBody = ({ rows, onDeleteData, onShowModal, onRestoreData, onFin
               const width = index === 1 ? '40%' : '20%';
               return (
                 <TableCell key={row.id + key} align={align} sx={{ width: width }}>
-                  {row[key]}
+                  <Box sx={{ display: '-webkit-box', overflow: 'hidden', textOverflow: 'ellipsis', WebkitBoxOrient: 'vertical', WebkitLineClamp: '2' }}>
+                    {row[key]}
+                  </Box>
                 </TableCell>
               );
             }

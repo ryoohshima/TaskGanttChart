@@ -1,6 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import Chart from 'chart.js/auto';
 import 'chartjs-adapter-date-fns';
+import zoomPlugin from 'chartjs-plugin-zoom';
+Chart.register(zoomPlugin);
 
 const GanttChart = ({ chartOptions }) => {
   const chartRef = useRef(null);

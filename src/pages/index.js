@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { supabase, fetchData } from '@/lib/supabase';
 import { Box } from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
 import CustomTable from '@/components/organisms/table';
-import GanttChart from '@/components/organisms/ganttChart';
 import CustomTabs from '@/components/organisms/tab';
 import CustomModal from '@/components/organisms/modal';
 import createChartOptions from '@/lib/chart';
 import { getMemberId, getMemberName } from '@/lib/assign';
+
+// ガントチャートコンポーネントの動的インポート
+const GanttChart = dynamic(() => import('@/components/organisms/ganttChart'), { ssr: false });
 
 export const getServerSideProps = async () => {
   // サーバーサイドでデータを取得
@@ -263,8 +266,8 @@ const Dashboard = ({ tasks, members }) => {
       <Box role="tabpanel" hidden={tabValue !== 0}>
         <CustomTable header={header} rows={rows} onDeleteData={handleDeleteData} onShowModal={handleShowModal} onFinishTask={handleFinishTask} />
       </Box>
-      <Box role="tabpanel" hidden={tabValue !== 1} sx={{ position: 'relative', overflowX: 'scroll' }}>
-        <Box sx={{ width: '1000px' }}>
+      <Box role="tabpanel" hidden={tabValue !== 1} sx={{ overflowX: 'auto' }}>
+        <Box sx={{ width: '100%' }}>
           <GanttChart chartOptions={chartOptions} />
         </Box>
       </Box>
