@@ -42,27 +42,27 @@ const RowMenu = ({ row, onDeleteData, onShowModal, onRestoreData, onFinishTask }
         }}
       >
         {onFinishTask && (
-          <MenuItem onClick={() => { onFinishTask(row.id) }}>
-            <DoneIcon />
-            finish
+          <MenuItem onClick={() => { onFinishTask(row.id) }} sx={{ display: 'flex', gap: '4px', fontSize: '14px' }}>
+            <DoneIcon fontSize='small' />
+            Finish
           </MenuItem>
         )}
         {onShowModal && (
-          <MenuItem onClick={() => { onShowModal(row); handleClose(); }}>
-            <EditIcon />
-            edit
+          <MenuItem onClick={() => { onShowModal(row); handleClose(); }} sx={{ display: 'flex', gap: '4px', fontSize: '14px' }}>
+            <EditIcon fontSize='small' />
+            Edit
           </MenuItem>
         )}
         {onDeleteData && (
-          <MenuItem onClick={() => onDeleteData(row.id)}>
-            <DeleteIcon />
-            delete
+          <MenuItem onClick={() => onDeleteData(row.id)} sx={{ display: 'flex', gap: '4px', fontSize: '14px', color: 'red' }}>
+            <DeleteIcon fontSize='small' />
+            Delete
           </MenuItem>
         )}
         {onRestoreData && (
-          <MenuItem onClick={() => onRestoreData(row.id)}>
-            <RestoreIcon />
-            restore
+          <MenuItem onClick={() => onRestoreData(row.id)} sx={{ display: 'flex', gap: '4px', fontSize: '14px' }}>
+            <RestoreIcon fontSize='small' />
+            Restore
           </MenuItem>
         )}
       </Menu>
