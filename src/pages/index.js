@@ -151,7 +151,8 @@ const Dashboard = ({ tasks, members }) => {
 
     if (newTasks.status == 200) {
       const data = await newTasks.json();
-      const rows = createRows(data);
+      const filteredData = data.filter((task) => !task.isFinished);
+      const rows = createRows(filteredData);
       setRows(rows);
       const chartOptions = createChartOptions(rows);
       setChartOptions(chartOptions);
@@ -224,12 +225,37 @@ const Dashboard = ({ tasks, members }) => {
     setLoading(false);
   }
 
+  // タスクの完了
+  const handleFinishTask = async (id) => {
+    setLoading(true);
+
+    // supabaseにデータを更新
+    const res = await fetch('/api/update', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        tableName: 'tasks',
+        data: { isFinished: true },
+        id: id,
+      }),
+    });
+
+    if (res.status == 200) {
+      handleReloadData();
+    } else {
+      alert('タスクの完了に失敗しました');
+    }
+    setLoading(false);
+  }
+
   return (
     <>
       <h1>Dashboard</h1>
       <CustomTabs buttons={buttons} tabValue={tabValue} onTabChange={handleTabChange} />
       <Box role="tabpanel" hidden={tabValue !== 0}>
-        <CustomTable header={header} rows={rows} onDeleteData={handleDeleteData} onShowModal={handleShowModal} />
+        <CustomTable header={header} rows={rows} onDeleteData={handleDeleteData} onShowModal={handleShowModal} onFinishTask={handleFinishTask} />
         <IconButton aria-label="add" onClick={handleModalOpen}>
           <AddIcon />
         </IconButton>
