@@ -72,6 +72,7 @@ const createChartOptions = (data) => {
           },
           min: setMinDate,
           max: setMaxDate,
+          position: 'top',
         },
       },
       plugins: {
